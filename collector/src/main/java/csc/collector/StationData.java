@@ -1,6 +1,7 @@
 
 package csc.collector;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -15,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "sensors",
     "datetime"
 })
-public class StationData {
+public class StationData implements Serializable {
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("sensors")
     private Sensors sensors;

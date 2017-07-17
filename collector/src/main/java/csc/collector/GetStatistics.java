@@ -14,6 +14,8 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -45,6 +47,7 @@ public class GetStatistics extends BaseRichSpout {
 			throw new RuntimeException("Error reading file ["+conf.get("jsonFile")+"]");
 		}
 		this.collector = collector;
+		this.mapper = new ObjectMapper();
 
 	}
 
@@ -62,6 +65,7 @@ public class GetStatistics extends BaseRichSpout {
 		
 		String str;
 		BufferedReader reader = new BufferedReader(fileReader);
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		
 		try {
 			while ((str = reader.readLine()) != null) {
@@ -86,7 +90,8 @@ public class GetStatistics extends BaseRichSpout {
 				}
 				
 				
-				this.collector.emit(new Values(sData), sData);
+				this.collector.emit(new Values(sData.getDatetime().getValue(),
+									sData.getSensors().getDHT22TEMP().toString()), sData.toString());
 			}
 		}
 		catch(Exception e) {
@@ -99,7 +104,7 @@ public class GetStatistics extends BaseRichSpout {
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("json"));
+		declarer.declare(new Fields("date", "temp"));
 
 	}
 

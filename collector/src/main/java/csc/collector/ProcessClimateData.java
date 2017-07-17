@@ -16,10 +16,15 @@ public class ProcessClimateData extends BaseBasicBolt {
 
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		//String str = input.getString(0);
-		StationData sData = (StationData) input.getValue(0);
+		//StationData sData = (StationData) input.getValue(0);
+		String date, temperature;
+		date = input.getString(0);
+		temperature = input.getString(1);
 		
 		
-		System.out.println("String received fron spout: "+ sData.getDatetime().getValue().toString());
+		//System.out.println("String received fron spout: "+ sData.getDatetime().getValue().toString());
+		System.out.println("String received fron spout: Date "+ date 
+				+ " Temperature: "+temperature);
 		count++;
 
 	}
