@@ -15,6 +15,7 @@ public class TopologyMain {
 		builder.setSpout("get-statistcs", new GetStatistics());
 		builder.setBolt("process-climate",  new ProcessClimateData())
 		.shuffleGrouping("get-statistcs");
+		builder.setBolt("report-average",  new ProcessReport()).globalGrouping("process-climate");
 		
 		Config conf = new Config();
 		conf.put("jsonFile",  args[0]);
