@@ -90,8 +90,9 @@ public class GetStatistics extends BaseRichSpout {
 				}
 				
 				
-				this.collector.emit(new Values(sData.getDatetime().getValue(),
-									sData.getSensors().getDHT22TEMP().toString()), sData.toString());
+				//this.collector.emit(new Values(sData.getDatetime().getValue(),
+				//					sData.getSensors().getDHT22TEMP().toString()), sData.toString());
+				this.collector.emit(new Values(sData.getDatetime(), sData), sData.toString());
 			}
 		}
 		catch(Exception e) {

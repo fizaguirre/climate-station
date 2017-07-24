@@ -4,19 +4,30 @@ import json
 import sys
 import random
 import time
+from datetime import datetime
+from datetime import timedelta
 
 MESSAGE_STRING = 186
 
 def generate(n, filename):
-    dateFormat = '%Y-%m-%d-%H-%M-%S'
+    daysBefore = n/24
 
+    dateFormat = '%Y-%m-%d-%H-%M-%S'
+    #today = time.time()
+    lastPeriod = datetime.now() - timedelta(minutes=daysBefore)
+    print("Number of minutes %i" % daysBefore)
+    print("Start date %s" % lastPeriod.strftime(dateFormat))
+
+    currentHour = lastPeriod
     with open(filename, 'w+') as f:
         for i in range(n):
             data ={}
             datetimeValues = {}
             datetimeValues['format'] = dateFormat
             datetimeValues['source'] = 'RTC_DS1307'
-            datetimeValues['value'] = time.strftime(dateFormat)
+            #datetimeValues['value'] = time.strftime(dateFormat)
+            datetimeValues['value'] = currentHour.strftime(dateFormat)
+            currentHour = currentHour + timedelta(minutes=1)
 
             sensorsValues = {}
             sensorsValues['LDR'] = random.uniform(30.0,50.0)

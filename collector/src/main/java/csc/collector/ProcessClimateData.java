@@ -22,17 +22,19 @@ public class ProcessClimateData extends BaseBasicBolt {
 
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		//String str = input.getString(0);
-		//StationData sData = (StationData) input.getValue(0);
-		String date, temperature;
-		date = input.getString(0);
-		temperature = input.getString(1);
+		Datetime date = (Datetime) 
+				input.getValueByField("date");
+		StationData sData = (StationData) input.getValueByField("temp");
+		//String date, temperature;
+		//date = input.getString(0);
+		//temperature = input.getString(1);
 		
 		
 		//System.out.println("String received fron spout: "+ sData.getDatetime().getValue().toString());
-		System.out.println("String received fron spout: Date "+ date 
-				+ " Temperature: "+temperature);
+		System.out.println("String received fron spout: Date "+ date.getValue() 
+				+ " Temperature: "+ sData.getSensors().getDHT22TEMP().toString());
 		
-		temperatureAccumulator += Double.parseDouble(temperature);
+		temperatureAccumulator += sData.getSensors().getDHT22TEMP();
 		count++;
 		
 		average = temperatureAccumulator / count;

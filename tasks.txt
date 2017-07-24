@@ -1,0 +1,6 @@
+- Experimento
+	- Plano de experimentos
+	- Variar taxa do stream
+	- Quantidade de nodos
+- Gerar relatorio
+

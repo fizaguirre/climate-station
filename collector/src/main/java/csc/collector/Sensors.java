@@ -1,6 +1,7 @@
 
 package csc.collector;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "BMP085_PRESSURE",
     "DHT22_TEMP"
 })
-public class Sensors {
+public class Sensors implements Serializable {
 
     @JsonProperty("DHT22_AH")
     private Double dHT22AH;

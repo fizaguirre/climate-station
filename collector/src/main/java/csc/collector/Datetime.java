@@ -1,6 +1,7 @@
 
 package csc.collector;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "value",
     "format"
 })
-public class Datetime {
+public class Datetime implements Serializable {
 
     @JsonProperty("source")
     private String source;
