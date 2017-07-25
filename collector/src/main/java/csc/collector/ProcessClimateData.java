@@ -26,7 +26,8 @@ public class ProcessClimateData extends BaseBasicBolt {
 		StationData sData = (StationData) input.getValueByField("data");
 		
 		System.out.println("String received fron spout: Source "+ source 
-				+ " Temperature: "+ sData.getSensors().getDHT22TEMP().toString());
+				+ " Temperature: "+ sData.getSensors().getDHT22TEMP().toString() + " tid: " +
+				Long.toString(Thread.currentThread().getId()));
 		
 		temperatureAccumulator += sData.getSensors().getDHT22TEMP();
 		count++;
@@ -34,6 +35,7 @@ public class ProcessClimateData extends BaseBasicBolt {
 		average = temperatureAccumulator / count;
 		
 		collector.emit(new Values(Long.toString(Thread.currentThread().getId()), average));
+		//collector.emit(new Values(sData.getDatetime().getStationID(), average));
 
 	}
 

@@ -18,8 +18,8 @@ public class ProcessReport extends BaseRichBolt {
 	}
 
 	public void execute(Tuple input) {
-		String worker = input.getString(0);
-		Double average = input.getDouble(1);
+		String worker = (String) input.getValueByField("worker");
+		Double average = (Double) input.getValueByField("average");
 		this.averages.put(worker,  average);
 	}
 

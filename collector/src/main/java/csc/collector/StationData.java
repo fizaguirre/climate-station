@@ -10,14 +10,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "sensors",
     "datetime"
 })
-public class StationData implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class StationData implements Serializable
+{
 
     @JsonProperty("sensors")
     private Sensors sensors;
@@ -25,6 +26,7 @@ public class StationData implements Serializable {
     private Datetime datetime;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final static long serialVersionUID = -3380959894865867235L;
 
     @JsonProperty("sensors")
     public Sensors getSensors() {
@@ -44,6 +46,11 @@ public class StationData implements Serializable {
     @JsonProperty("datetime")
     public void setDatetime(Datetime datetime) {
         this.datetime = datetime;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
     @JsonAnyGetter

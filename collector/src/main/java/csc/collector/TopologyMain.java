@@ -6,16 +6,17 @@ import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.topology.TopologyBuilder;
+import backtype.storm.tuple.Fields;
 
 public class TopologyMain {
 
 	public static void main(String[] args) throws InterruptedException {
 		
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("get-statistcs", new GetStatistics());
-		builder.setBolt("process-climate",  new ProcessClimateData())
-		.shuffleGrouping("get-statistcs");
-		builder.setBolt("report-average",  new ProcessReport()).globalGrouping("process-climate");
+		builder.setSpout("get-statistics", new GetStatistics());
+		builder.setBolt("process-data",  new ProcessClimateData()).
+		fieldsGrouping("get-statistics", new Fields("source"));
+		builder.setBolt("report-average",  new ProcessReport()).globalGrouping("process-data");
 		
 		Config conf = new Config();
 		conf.put("jsonFile",  args[0]);

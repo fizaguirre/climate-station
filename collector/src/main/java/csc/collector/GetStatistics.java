@@ -89,7 +89,7 @@ public class GetStatistics extends BaseRichSpout {
 					e.printStackTrace();
 				}
 				
-				this.collector.emit(new Values(sData.getDatetime().getSource(), sData), sData.toString());
+				this.collector.emit(new Values(sData.getDatetime().getStationID().toString(), sData), sData.toString());
 			}
 		}
 		catch(Exception e) {
