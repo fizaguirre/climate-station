@@ -30,11 +30,11 @@ public class GetStatistics extends BaseRichSpout {
 	
 	
 	public void ack(Object msgId) {
-		System.out.println("OK:"+msgId);
+		System.out.println("OK: "+msgId);
 	}
 	
 	public void fail(Object msgId) {
-		System.out.println("FAIL:"+msgId);
+		System.out.println("FAIL: "+msgId);
 	}
 	
 	public void close() {}
@@ -89,10 +89,7 @@ public class GetStatistics extends BaseRichSpout {
 					e.printStackTrace();
 				}
 				
-				
-				//this.collector.emit(new Values(sData.getDatetime().getValue(),
-				//					sData.getSensors().getDHT22TEMP().toString()), sData.toString());
-				this.collector.emit(new Values(sData.getDatetime(), sData), sData.toString());
+				this.collector.emit(new Values(sData.getDatetime().getSource(), sData), sData.toString());
 			}
 		}
 		catch(Exception e) {
@@ -105,7 +102,7 @@ public class GetStatistics extends BaseRichSpout {
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("date", "temp"));
+		declarer.declare(new Fields("source", "data"));
 
 	}
 
