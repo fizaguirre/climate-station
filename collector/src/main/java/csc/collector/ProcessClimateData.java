@@ -30,16 +30,7 @@ public class ProcessClimateData extends BaseBasicBolt {
 		System.out.println("String received fron spout: Source "+ source 
 				+ " Temperature: "+ sData.getSensors().getDHT22TEMP().toString() + " tid: " +
 				Long.toString(Thread.currentThread().getId()));
-		
-		
-		if (accumulator.containsKey(sData.getDatetime().getStationID())) {
-			HashMap<Double, Long> value = accumulator.get(sData.getDatetime().getStationID());
-			//value.put(value.get(key), value)
-			accumulator.put(sData.getDatetime().getStationID(),
-					accumulator.pu)
-		}
-		
-		accumulator.put(sData.getDatetime().getStationID(), value)		
+				
 		temperatureAccumulator += sData.getSensors().getDHT22TEMP();
 		count++;
 		
