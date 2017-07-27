@@ -11,6 +11,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -19,6 +20,7 @@ public class ProcessClimateData extends BaseBasicBolt {
 	private double temperatureAccumulator = 0.0;
 	private double average = 0.0;
 	private OutputCollector collector;
+	private HashMap<Long, HashMap<Double,Long> > accumulator; 
 
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		String source = (String) 
@@ -29,6 +31,15 @@ public class ProcessClimateData extends BaseBasicBolt {
 				+ " Temperature: "+ sData.getSensors().getDHT22TEMP().toString() + " tid: " +
 				Long.toString(Thread.currentThread().getId()));
 		
+		
+		if (accumulator.containsKey(sData.getDatetime().getStationID())) {
+			HashMap<Double, Long> value = accumulator.get(sData.getDatetime().getStationID());
+			//value.put(value.get(key), value)
+			accumulator.put(sData.getDatetime().getStationID(),
+					accumulator.pu)
+		}
+		
+		accumulator.put(sData.getDatetime().getStationID(), value)		
 		temperatureAccumulator += sData.getSensors().getDHT22TEMP();
 		count++;
 		
@@ -46,6 +57,7 @@ public class ProcessClimateData extends BaseBasicBolt {
 	
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
+		accumulator = new HashMap<Long, HashMap<Double, Long>>();
 	}
 	
 	@Override

@@ -13,8 +13,8 @@ public class TopologyMain {
 	public static void main(String[] args) throws InterruptedException {
 		
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("get-statistics", new GetStatistics());
-		builder.setBolt("process-data",  new ProcessClimateData()).
+		builder.setSpout("get-statistics", new GetStatistics(), 2);
+		builder.setBolt("process-data",  new ProcessClimateData(), 4).
 		fieldsGrouping("get-statistics", new Fields("source"));
 		builder.setBolt("report-average",  new ProcessReport()).globalGrouping("process-data");
 		
