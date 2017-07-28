@@ -23,6 +23,7 @@ public class ProcessClimateData extends BaseBasicBolt {
 	private HashMap<Long, HashMap<Double,Long> > accumulator; 
 
 	public void execute(Tuple input, BasicOutputCollector collector) {
+		//System.out.println("=== Executing Execute ====");
 		String source = (String) 
 				input.getValueByField("source");
 		StationData sData = (StationData) input.getValueByField("data");
@@ -46,8 +47,10 @@ public class ProcessClimateData extends BaseBasicBolt {
 
 	}
 	
-	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-		this.collector = collector;
+	@Override
+	public void prepare(Map stormConf, TopologyContext context) {
+		//System.out.println("=== Executing Prepare ====");
+		//this.collector = collector;
 		accumulator = new HashMap<Long, HashMap<Double, Long>>();
 	}
 	
