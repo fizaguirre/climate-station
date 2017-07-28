@@ -11,52 +11,68 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class ProcessClimateData extends BaseBasicBolt {
-	private long count = 0;
-	private double temperatureAccumulator = 0.0;
-	private double average = 0.0;
-	private OutputCollector collector;
-	private HashMap<Long, HashMap<Double,Long> > accumulator; 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private HashMap<Integer, Long > counter;
+	private HashMap<Integer, Double > accumulator;
 
 	public void execute(Tuple input, BasicOutputCollector collector) {
-		//System.out.println("=== Executing Execute ====");
-		String source = (String) 
-				input.getValueByField("source");
+
+		
 		StationData sData = (StationData) input.getValueByField("data");
 		
-		System.out.println("String received fron spout: Source "+ source 
+		/*String source = (String) 
+				input.getValueByField("source");
+		  System.out.println("String received fron spout: Source "+ source 
 				+ " Temperature: "+ sData.getSensors().getDHT22TEMP().toString() + " tid: " +
 				Long.toString(Thread.currentThread().getId()));
-				
-		temperatureAccumulator += sData.getSensors().getDHT22TEMP();
-		count++;
+		*/
 		
-		average = temperatureAccumulator / count;
+		if (this.accumulator.containsKey(sData.getDatetime().getStationID())) {
+			this.counter.put(sData.getDatetime().getStationID(),
+					this.counter.get(sData.getDatetime().getStationID()) + 1);
+			
+			this.accumulator.put(sData.getDatetime().getStationID(),
+					this.accumulator.get(sData.getDatetime().getStationID()) + sData.getSensors().getDHT22TEMP());
+		}
+		else
+		{
+			this.counter.put(sData.getDatetime().getStationID(), new Long(1));
+			
+			this.accumulator.put(sData.getDatetime().getStationID(),
+					sData.getSensors().getDHT22TEMP());
+		}
 		
-		collector.emit(new Values(Long.toString(Thread.currentThread().getId()), average));
-		//collector.emit(new Values(sData.getDatetime().getStationID(), average));
-
+		collector.emit(new Values(Long.toString(Thread.currentThread().getId()), counter, accumulator));
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("worker", "average"));
+		declarer.declare(new Fields("worker", "counter", "data"));
 
 	}
 	
 	@Override
 	public void prepare(Map stormConf, TopologyContext context) {
-		//System.out.println("=== Executing Prepare ====");
-		//this.collector = collector;
-		accumulator = new HashMap<Long, HashMap<Double, Long>>();
+		this.accumulator = new HashMap<Integer, Double>();
+		this.counter = new HashMap<Integer, Long>();
 	}
 	
 	@Override
 	public void cleanup() {
-		//System.out.println("Number of messages: " + Long.toString(count));
+		System.out.println("=== Worker : " + Thread.currentThread().getId() + "====");
+		
+		for ( Map.Entry<Integer, Long> wCount : this.counter.entrySet()) {
+			System.out.println("Station ID: " + wCount.getKey()
+				+ " Counter: " + wCount.getValue() + " Data: " + this.accumulator.get(wCount.getKey()));
+		}
 	}
 
 }
