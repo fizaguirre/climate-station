@@ -29,7 +29,7 @@ public class GetStatistics extends BaseRichSpout {
 	
 	
 	public void ack(Object msgId) {
-		System.out.println("OK: "+msgId);
+		//System.out.println("OK: "+msgId);
 	}
 	
 	public void fail(Object msgId) {

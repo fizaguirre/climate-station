@@ -22,9 +22,10 @@ public class TopologyMain {
 		Config conf = new Config();
 		conf.put("jsonFile",  args[0]);
 		conf.setDebug(false);
-		
+
 		if( args != null && args.length == 2)
 		{
+			System.out.println("===== > Starting Remote Cluster");
 			try {
 				StormSubmitter.submitTopology("climate-station-processor", conf,
 						builder.createTopology());
@@ -38,14 +39,17 @@ public class TopologyMain {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			System.out.println("===== > Shutting down Remote Cluster");
 		}
 		else
 		{
+			System.out.println("===== > Starting Local Cluster");
 			conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 			LocalCluster cluster = new LocalCluster();
 			cluster.submitTopology("Collecting data",  conf,  builder.createTopology());
 			Thread.sleep(10000);
 			cluster.shutdown();
+			System.out.println("===== > Shutting down Local Cluster");
 		}
 		
 	}
