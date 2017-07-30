@@ -80,5 +80,11 @@
 		<artifactId>commons-lang3</artifactId>
 		<version>3.6</version>
 	</dependency>
+	
+	<dependency>
+	<groupId>com.microsoft.azure</groupId>
+	<artifactId>azure-storage</artifactId>
+	<version>5.4.0</version>
+</dependency>
   </dependencies>
 </project>

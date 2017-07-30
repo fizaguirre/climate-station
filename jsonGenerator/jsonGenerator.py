@@ -22,6 +22,7 @@ def generate(n):
         datetimeValues = {}
         datetimeValues['format'] = dateFormat
         datetimeValues['source'] = 'RTC_DS1307'
+        datetimeValues['stationID'] = random.randint(0,10)
         datetimeValues['value'] = time.strftime(dateFormat)
 
         sensorsValues = {}
@@ -33,8 +34,8 @@ def generate(n):
         data['sensors'] = sensorsValues
         data['datetime'] = datetimeValues
 
-        print json.dumps(data)
-        queue_service.put_message('stormtest', str(data).decode('utf-8'))
+        print json.dumps(data).decode('utf-8')
+        queue_service.put_message('stormtest', json.dumps(data).decode('utf-8'))
         time.sleep(n)
 
 def main():

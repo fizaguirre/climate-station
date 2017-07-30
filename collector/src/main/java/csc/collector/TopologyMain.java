@@ -20,7 +20,7 @@ public class TopologyMain {
 		builder.setBolt("report-average",  new ProcessReport()).globalGrouping("process-data");
 		
 		Config conf = new Config();
-		conf.put("jsonFile",  args[0]);
+		//conf.put("jsonFile",  args[0]);
 		conf.setDebug(false);
 
 		if( args != null && args.length == 2)

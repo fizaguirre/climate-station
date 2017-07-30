@@ -1,5 +1,8 @@
 package csc.collector;
 
+import com.microsoft.azure.storage.*;
+import com.microsoft.azure.storage.queue.*;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -27,6 +30,14 @@ public class GetStatistics extends BaseRichSpout {
 	ObjectMapper mapper;
 	StationData sData;
 	
+	public static final String storageConnectionString =
+		    "DefaultEndpointsProtocol=http;" +
+		    "AccountName=izastorm;" +
+		    "AccountKey=isUic1EEbXg8l53zUrl+o1Jmf8JPze/E8S5XQ3ActlrmpEmGqMSKdkSP/RTF4aFAdQmLeVy6DWT3pGJ1k/I2HA==";
+	
+	CloudStorageAccount csa;
+	CloudQueueClient cqc;
+	CloudQueue cq;
 	
 	public void ack(Object msgId) {
 		//System.out.println("OK: "+msgId);
@@ -39,64 +50,41 @@ public class GetStatistics extends BaseRichSpout {
 	public void close() {}
 
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-		try {
-			this.fileReader = new FileReader(conf.get("jsonFile").toString());
-		}
-		catch (FileNotFoundException e) {
-			throw new RuntimeException("Error reading file ["+conf.get("jsonFile")+"]");
-		}
 		this.collector = collector;
 		this.mapper = new ObjectMapper();
+		this.mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		
+		try{
+			csa = CloudStorageAccount.parse(storageConnectionString);
+			cqc = csa.createCloudQueueClient();
+			cq = cqc.getQueueReference("stormtest");
+			cq.setShouldEncodeMessage(false);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	public void nextTuple() {
-		
-		if (complete) {
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-				// TODO: handle exception
-			}
-			return;
-		}
-		
-		String str;
-		BufferedReader reader = new BufferedReader(fileReader);
-		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-		
 		try {
-			while ((str = reader.readLine()) != null) {
-				
-				
-				try
-				{
-					sData = mapper.readValue(str,  StationData.class);
-				}
-				catch (JsonGenerationException e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-				catch (JsonMappingException e){
-					e.printStackTrace();
-				} catch (JsonParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				this.collector.emit(new Values(sData.getDatetime().getStationID().toString(), sData), sData.toString());
+			CloudQueueMessage message = cq.retrieveMessage();
+			
+			if (message != null)
+			{
+				sData = this.mapper.readValue(message.getMessageContentAsString(), StationData.class);
+				this.collector.emit(new Values(sData.getDatetime().getStationID(),
+						sData));
+				cq.deleteMessage(message);
 			}
 		}
-		catch(Exception e) {
-			throw new RuntimeException("Error reading tunple", e);
+		catch (StorageException e) {
+			System.out.println(e.getExtendedErrorInformation().toString());
 		}
-		finally {
-			complete = true;
+		catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		
 	}
 
