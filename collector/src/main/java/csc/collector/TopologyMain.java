@@ -17,9 +17,24 @@ public class TopologyMain {
 		
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("get-statistics", new GetStatistics(), 2);
-		builder.setBolt("process-data",  new ProcessClimateData(), 4).
+		//RH
+		builder.setBolt("rh-status", new LDRStatus(), 4).
 		fieldsGrouping("get-statistics", new Fields("source"));
-		builder.setBolt("report-average",  new ProcessReport()).globalGrouping("process-data");
+		//LDR
+		builder.setBolt("ldr-status", new LDRStatus(), 4).
+		fieldsGrouping("get-statistics", new Fields("source"));
+		//ATM
+		builder.setBolt("atm-status", new ATMLevel(), 4).
+		fieldsGrouping("get-statistics", new Fields("source"));
+		//HI
+		builder.setBolt("compute-heat-index", new ComputeHeatIndex(), 4).
+		fieldsGrouping("get-statistics", new Fields("source"));
+		//Summary
+		builder.setBolt("summary", new SummaryResults(), 4)
+			.shuffleGrouping("ldr-status")
+			.shuffleGrouping("atm-status")
+			.shuffleGrouping("rh-status")
+			.shuffleGrouping("compute-heat-index");
 		
 		Config conf = new Config();
 		//conf.put("jsonFile",  args[0]);
