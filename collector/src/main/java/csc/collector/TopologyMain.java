@@ -9,6 +9,8 @@ import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
+import csc.collector.*;
+
 public class TopologyMain {
 
 	public static void main(String[] args) throws InterruptedException {
@@ -23,8 +25,21 @@ public class TopologyMain {
 		//conf.put("jsonFile",  args[0]);
 		conf.setDebug(false);
 
-		if( args != null && args.length == 2)
-		{
+		if( args != null && args.length == 1) {
+			if (args[0].equals("local")) {
+				System.out.println("===== > Starting Local Cluster");
+				conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
+				LocalCluster cluster = new LocalCluster();
+				cluster.submitTopology("Collecting data",  conf,  builder.createTopology());
+				Thread.sleep(10000);
+				cluster.shutdown();
+				System.out.println("===== > Shutting down Local Cluster");
+			}
+			else {
+				System.out.println("Incorrect argument");
+			}
+		}
+		else {
 			System.out.println("===== > Starting Remote Cluster");
 			try {
 				StormSubmitter.submitTopology("climate-station-processor", conf,
@@ -40,16 +55,6 @@ public class TopologyMain {
 				e.printStackTrace();
 			}
 			System.out.println("===== > Shutting down Remote Cluster");
-		}
-		else
-		{
-			System.out.println("===== > Starting Local Cluster");
-			conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
-			LocalCluster cluster = new LocalCluster();
-			cluster.submitTopology("Collecting data",  conf,  builder.createTopology());
-			Thread.sleep(10000);
-			cluster.shutdown();
-			System.out.println("===== > Shutting down Local Cluster");
 		}
 		
 	}
