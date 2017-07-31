@@ -23,12 +23,12 @@ public class ATMLevel extends BaseBasicBolt {
 		StationData sData = (StationData) input.getValueByField("data");
 		
 		if (sData != null) {
-			if ( sData.getSensors().getBMP085PRESSUqRE() > 1013.0)
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+			if ( sData.getSensors().getBMP085PRESSURE() > 1013.0)
+				collector.emit(new Values(SenderBolt.ATMLevelBolt,
 						sData.getDatetime().getValue(),
 						ATMLevelData.High));
-			else if ( sData.getSensors().getBMP085PRESSUqRE() <= 1013.0)
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+			else if ( sData.getSensors().getBMP085PRESSURE() <= 1013.0)
+				collector.emit(new Values(SenderBolt.ATMLevelBolt,
 						sData.getDatetime().getValue(),
 						ATMLevelData.Low));
 		}

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonPropertyOrder({
     "DHT22_AH",
     "LDR",
-    "BMP085_PRESSUqRE",
+    "BMP085_PRESSURE",
     "DHT22_TEMP"
 })
 public class Sensors implements Serializable
@@ -26,8 +26,8 @@ public class Sensors implements Serializable
     private Double dHT22AH;
     @JsonProperty("LDR")
     private Double lDR;
-    @JsonProperty("BMP085_PRESSUqRE")
-    private Double bMP085PRESSUqRE;
+    @JsonProperty("BMP085_PRESSURE")
+    private Double bMP085PRESSURE;
     @JsonProperty("DHT22_TEMP")
     private Double dHT22TEMP;
     @JsonIgnore
@@ -54,14 +54,14 @@ public class Sensors implements Serializable
         this.lDR = lDR;
     }
 
-    @JsonProperty("BMP085_PRESSUqRE")
-    public Double getBMP085PRESSUqRE() {
-        return bMP085PRESSUqRE;
+    @JsonProperty("BMP085_PRESSURE")
+    public Double getBMP085PRESSURE() {
+        return bMP085PRESSURE;
     }
 
-    @JsonProperty("BMP085_PRESSUqRE")
-    public void setBMP085PRESSUqRE(Double bMP085PRESSUqRE) {
-        this.bMP085PRESSUqRE = bMP085PRESSUqRE;
+    @JsonProperty("BMP085_PRESSURE")
+    public void setBMP085PRESSURE(Double bMP085PRESSURE) {
+        this.bMP085PRESSURE = bMP085PRESSURE;
     }
 
     @JsonProperty("DHT22_TEMP")

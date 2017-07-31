@@ -25,15 +25,15 @@ public class LDRStatus extends BaseBasicBolt {
 		
 		if(sData != null) {
 			if(sData.getSensors().getLDR() > 90.0)
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+				collector.emit(new Values(SenderBolt.LDRStatusBolt,
 						sData.getDatetime().getValue(),
 						LDRData.Sunny));
 			else if (sData.getSensors().getLDR() > 60.0)
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+				collector.emit(new Values(SenderBolt.LDRStatusBolt,
 						sData.getDatetime().getValue(),
 						LDRData.Mood));
 			else
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+				collector.emit(new Values(SenderBolt.LDRStatusBolt,
 						sData.getDatetime().getValue(),
 						LDRData.Night));
 				

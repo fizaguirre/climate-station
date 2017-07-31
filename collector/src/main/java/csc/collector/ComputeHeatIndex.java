@@ -24,9 +24,19 @@ public class ComputeHeatIndex extends BaseBasicBolt {
 	private final Double c7 = 0.00122874;
 	private final Double c8 = 0.00085282;
 	private final Double c9 = -0.00000199;
+	
+	public enum HeatIndexStatus {
+		OK,
+		CAUTION,
+		EXTREMELY_CAUTION,
+		DANGER,
+		EXTREMELY_DANGER
+	}
 
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		StationData sData = (StationData) input.getValueByField("data");
+		
+		HeatIndexStatus hs = HeatIndexStatus.OK;
 		
 		if (sData != null) {
 			Double T = 1.8 * sData.getSensors().getDHT22AH() + 32.0; //Temperature in F
@@ -35,18 +45,33 @@ public class ComputeHeatIndex extends BaseBasicBolt {
 			Double T2 = T*T;
 			Double R2 = R*R;
 			
-			ic = (5/9)*((c1 + c2*T + c3*R + c4*T*R + c5*T2
+			ic = (5.0/9.0)*((c1 + c2*T + c3*R + c4*T*R + c5*T2
 					+ c6*R2 + c7*T2*R + c8*T*R2 + c9*T2*R2) - 32);
 			
-			collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+			ic = ic/1.8 - 32;
+			
+			
+			if ( ic < 27 )
+				hs = HeatIndexStatus.OK;
+			else if ( ic >= 27 && ic < 32)
+				hs = HeatIndexStatus.CAUTION;
+			else if (ic >= 32 && ic < 41)
+				hs = HeatIndexStatus.EXTREMELY_CAUTION;
+			else if (ic >= 41 && ic < 54)
+				hs = HeatIndexStatus.DANGER;
+			else if (ic >= 54)
+				hs = HeatIndexStatus.EXTREMELY_DANGER;
+			
+			
+			collector.emit(new Values(SenderBolt.ComputeHeatIndexBolt,
 					sData.getDatetime().getValue(),
-					ic));
+					ic, hs));
 		}
 
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer arg0) {
-		arg0.declare(new Fields("worker", "time", "data"));
+		arg0.declare(new Fields("worker", "time", "ic", "status"));
 
 	}
 

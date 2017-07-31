@@ -24,16 +24,16 @@ public class RHStatus extends BaseBasicBolt {
 		StationData sData = (StationData) input.getValueByField("data");
 		
 		if(sData != null) {
-			if(sData.getSensors().getBMP085PRESSUqRE().intValue() >= 20 )
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+			if(sData.getSensors().getBMP085PRESSURE().intValue() >= 20 )
+				collector.emit(new Values(SenderBolt.RHStatusBolt,
 						sData.getDatetime().getValue(),
 						RHStateData.Atention));
-			else if (sData.getSensors().getBMP085PRESSUqRE().intValue() >= 12)
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+			else if (sData.getSensors().getBMP085PRESSURE().intValue() >= 12)
+				collector.emit(new Values(SenderBolt.RHStatusBolt,
 						sData.getDatetime().getValue(),
 						RHStateData.Alert));
-			else if (sData.getSensors().getBMP085PRESSUqRE().intValue() < 12)
-				collector.emit(new Values(Long.toString(Thread.currentThread().getId()),
+			else if (sData.getSensors().getBMP085PRESSURE().intValue() < 12)
+				collector.emit(new Values(SenderBolt.RHStatusBolt,
 						sData.getDatetime().getValue(),
 						RHStateData.Emergency));
 		}
