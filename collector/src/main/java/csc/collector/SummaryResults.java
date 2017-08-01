@@ -117,31 +117,31 @@ public class SummaryResults extends BaseRichBolt {
 			else {
 				table = new DataTableReport(sData.getDatetime().getStationID(),
 						sData.getDatetime().getValue());
-				table.setTemperature(sData.getSensors().getDHT22TEMP());
+				table.setTemperature(sData.getSensors().getDHT22TEMP().toString());
 			}
 				
 			switch ( sender ) {
 			case ATMLevelBolt:
 				ATMLevelData atm = (ATMLevelData) entry.getValueByField("data");
-				table.setAtmStatus(atm);
-				table.setAtmValue(sData.getSensors().getDHT22AH());
+				table.setAtmStatus(atm.toString());
+				table.setAtmValue(sData.getSensors().getDHT22AH().toString());
 				break;
 			case ComputeHeatIndexBolt:
 				Double chi = (Double) entry.getValueByField("ic");
 				HeatIndexStatus hs = (HeatIndexStatus) entry.getValueByField("status");
-				table.setHeatStatus(hs);
-				table.setHeatValue(chi);
-				table.setPressure(sData.getSensors().getBMP085PRESSURE());
+				table.setHeatStatus(hs.toString());
+				table.setHeatValue(chi.toString());
+				table.setPressure(sData.getSensors().getBMP085PRESSURE().toString());
 				break;
 			case LDRStatusBolt:
 				LDRData ldr = (LDRData) entry.getValueByField("data");
-				table.setLdrStatus(ldr);
-				table.setLdrValue(sData.getSensors().getLDR());
+				table.setLdrStatus(ldr.toString());
+				table.setLdrValue(sData.getSensors().getLDR().toString());
 				break;
 			case RHStatusBolt:
 				RHStateData rh = (RHStateData) entry.getValueByField("data");
-				table.setRhStatus(rh);
-				table.setRhValue(sData.getSensors().getDHT22AH());
+				table.setRhStatus(rh.toString());
+				table.setRhValue(sData.getSensors().getDHT22AH().toString());
 				break;
 			default:
 				break;

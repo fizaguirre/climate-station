@@ -46,7 +46,7 @@ public class TopologyMain {
 				conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 				LocalCluster cluster = new LocalCluster();
 				cluster.submitTopology("Collecting data",  conf,  builder.createTopology());
-				Thread.sleep(10000);
+				Thread.sleep(20000);
 				cluster.shutdown();
 				System.out.println("===== > Shutting down Local Cluster");
 			}

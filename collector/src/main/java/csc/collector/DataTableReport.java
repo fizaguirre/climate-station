@@ -8,16 +8,16 @@ import csc.collector.LDRStatus.LDRData;
 import csc.collector.RHStatus.RHStateData;
 
 public class DataTableReport extends TableServiceEntity {
-	ATMLevelData atmStatus;
-	Double atmValue;
-	LDRData ldrStatus;
-	Double ldrValue;
-	RHStateData rhStatus;
-	Double rhValue;
-	HeatIndexStatus heatStatus;
-	Double heatValue;
-	Double pressure;
-	Double temperature;
+	String atmStatus;
+	String atmValue;
+	String ldrStatus;
+	String ldrValue;
+	String rhStatus;
+	String rhValue;
+	String heatStatus;
+	String heatValue;
+	String pressure;
+	String temperature;
 	
 	Integer stationID;
 	String timeStamp;
@@ -59,84 +59,84 @@ public class DataTableReport extends TableServiceEntity {
 	}
 	
 	
-
-	public Double getPressure() {
-		return pressure;
-	}
-
-	public void setPressure(Double pressure) {
-		this.pressure = pressure;
-	}
-
-	public ATMLevelData getAtmStatus() {
+	
+	public String getAtmStatus() {
 		return atmStatus;
 	}
 
-	public void setAtmStatus(ATMLevelData atmStatus) {
+	public void setAtmStatus(String atmStatus) {
 		this.atmStatus = atmStatus;
 	}
 
-	public Double getAtmValue() {
+	public String getAtmValue() {
 		return atmValue;
 	}
 
-	public void setAtmValue(Double atmValue) {
+	public void setAtmValue(String atmValue) {
 		this.atmValue = atmValue;
 	}
 
-	public LDRData getLdrStatus() {
+	public String getLdrStatus() {
 		return ldrStatus;
 	}
 
-	public void setLdrStatus(LDRData ldrStatus) {
+	public void setLdrStatus(String ldrStatus) {
 		this.ldrStatus = ldrStatus;
 	}
 
-	public Double getLdrValue() {
+	public String getLdrValue() {
 		return ldrValue;
 	}
 
-	public void setLdrValue(Double ldrValue) {
+	public void setLdrValue(String ldrValue) {
 		this.ldrValue = ldrValue;
 	}
 
-	public RHStateData getRhStatus() {
+	public String getRhStatus() {
 		return rhStatus;
 	}
 
-	public void setRhStatus(RHStateData rhStatus) {
+	public void setRhStatus(String rhStatus) {
 		this.rhStatus = rhStatus;
 	}
 
-	public Double getRhValue() {
+	public String getRhValue() {
 		return rhValue;
 	}
 
-	public void setRhValue(Double rhValue) {
+	public void setRhValue(String rhValue) {
 		this.rhValue = rhValue;
 	}
 
-	public HeatIndexStatus getHeatStatus() {
+	public String getHeatStatus() {
 		return heatStatus;
 	}
 
-	public void setHeatStatus(HeatIndexStatus heatStatus) {
+	public void setHeatStatus(String heatStatus) {
 		this.heatStatus = heatStatus;
 	}
 
-	public Double getHeatValue() {
+	public String getHeatValue() {
 		return heatValue;
 	}
 
-	public void setHeatValue(Double heatValue) {
+	public void setHeatValue(String heatValue) {
 		this.heatValue = heatValue;
 	}
 
-	public Double getTemperature() {
+	public String getPressure() {
+		return pressure;
+	}
+
+	public void setPressure(String pressure) {
+		this.pressure = pressure;
+	}
+
+	public String getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(Double temperature) {
+	public void setTemperature(String temperature) {
 		this.temperature = temperature;
 	}
 
@@ -155,7 +155,15 @@ public class DataTableReport extends TableServiceEntity {
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
+
+	public Boolean getDone() {
+		return done;
+	}
+
+	public void setDone(Boolean done) {
+		this.done = done;
+	}
+
 	public boolean isDone() {
 		
 		if ( this.atmStatus == null )
