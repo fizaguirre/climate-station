@@ -12,7 +12,9 @@ import org.apache.storm.tuple.Tuple;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.table.CloudTable;
 import com.microsoft.azure.storage.table.CloudTableClient;
+import com.microsoft.azure.storage.table.TableBatchOperation;
 import com.microsoft.azure.storage.table.TableOperation;
+import com.microsoft.azure.storage.table.TableServiceException;
 
 import csc.collector.ATMLevel.ATMLevelData;
 import csc.collector.ComputeHeatIndex.HeatIndexStatus;
@@ -27,8 +29,8 @@ public class SummaryResults extends BaseRichBolt {
 	private static final long serialVersionUID = 1L;
 	private OutputCollector collector;
 	HashMap<Integer, HashMap<String, DataTableReport>> tableData;
+	//HashMap<Integer, TableBatchOperation> batchOperations;
 	CloudTable entryTable;
-	
 	public static final String storageConnectionString =
 		    "DefaultEndpointsProtocol=http;" +
 		    "AccountName=izastorm;" +
@@ -42,26 +44,26 @@ public class SummaryResults extends BaseRichBolt {
 		switch ( sender ) {
 		case ATMLevelBolt:
 			ATMLevelData atm = (ATMLevelData) input.getValueByField("data");
-			System.out.println("ATM: " + atm);
+			//System.out.println("ATM: " + atm);
 			sData = (StationData) input.getValueByField("sData");
 			this.insertTableEntry(sData, input, sender);
 			break;
 		case ComputeHeatIndexBolt:
 			Double chi = (Double) input.getValueByField("ic");
 			HeatIndexStatus hs = (HeatIndexStatus) input.getValueByField("status");
-			System.out.println("Heat Index: " + chi +" Status: "+ hs);
+			//System.out.println("Heat Index: " + chi +" Status: "+ hs);
 			sData = (StationData) input.getValueByField("sData");
 			this.insertTableEntry(sData, input, sender);
 			break;
 		case LDRStatusBolt:
 			LDRData ldr = (LDRData) input.getValueByField("data");
-			System.out.println("LDR: " + ldr);
+			//System.out.println("LDR: " + ldr);
 			sData = (StationData) input.getValueByField("sData");
 			this.insertTableEntry(sData, input, sender);
 			break;
 		case RHStatusBolt:
 			RHStateData rh = (RHStateData) input.getValueByField("data");
-			System.out.println("RH: " + rh);
+			//System.out.println("RH: " + rh);
 			sData = (StationData) input.getValueByField("sData");
 			this.insertTableEntry(sData, input, sender);
 			break;
@@ -73,17 +75,17 @@ public class SummaryResults extends BaseRichBolt {
 	public void prepare(Map map, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
 		this.tableData = new HashMap<Integer, HashMap<String, DataTableReport>>();
+		//this.batchOperations = new HashMap<Integer, TableBatchOperation>();
 		
 		try
 		{
-		    // Retrieve storage account from connection-string.
 		    CloudStorageAccount storageAccount =
 		        CloudStorageAccount.parse(storageConnectionString);
 
-		    // Create the table client.
 		    CloudTableClient tableClient = storageAccount.createCloudTableClient();
+		    
+		    //tableBatch = new TableBatchOperation();
 
-		    // Create the table if it doesn't exist.
 		    entryTable = tableClient.getTableReference("cstations");
 		    entryTable.createIfNotExists();
 		}
@@ -151,14 +153,23 @@ public class SummaryResults extends BaseRichBolt {
 			this.tableData.put(sData.getDatetime().getStationID(), report);
 			
 			if (table.isDone()) {
-				System.out.println("Table " + table.toString() + " done.");
-				TableOperation toperation = TableOperation.insert(table);
-				entryTable.execute(toperation);
+				try {
+					//System.out.println("Table " + table.toString() + " done.");
+					TableOperation op = TableOperation.insertOrReplace(table);
+					entryTable.execute(op);
+				}
+				catch (TableServiceException e) {
+					e.printStackTrace();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+}
 
 }

@@ -64,14 +64,14 @@ public class ComputeHeatIndex extends BaseBasicBolt {
 			
 			
 			collector.emit(new Values(SenderBolt.ComputeHeatIndexBolt,
-					sData.getDatetime().getValue(),
+					sData.getDatetime().getStationID(),
 					ic, hs, sData));
 		}
 
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer arg0) {
-		arg0.declare(new Fields("worker", "time", "ic", "status", "sData"));
+		arg0.declare(new Fields("worker", "sID", "ic", "status", "sData"));
 
 	}
 

@@ -192,4 +192,62 @@ public class DataTableReport extends TableServiceEntity {
 		return true;
 	}
 	
+	public DataTableReport merge(DataTableReport t) {
+		
+		if (t == null)
+			return this;
+		
+		DataTableReport d = new DataTableReport();
+		if (t.getAtmStatus() != null)
+			d.setAtmStatus(t.getAtmStatus());
+		else d.setAtmStatus(this.getAtmStatus());
+		
+		if (t.getAtmValue() != null)
+			d.setAtmValue(t.getAtmValue());
+		else d.setAtmValue(this.getAtmValue());
+		
+		if (t.getHeatStatus() != null)
+			d.setHeatStatus(t.getHeatStatus());
+		else d.setHeatStatus(this.getHeatStatus());
+		
+		if (t.getHeatValue() != null)
+			d.setHeatValue(t.getHeatValue());
+		else d.setHeatValue(this.getHeatValue());
+		
+		if (t.getLdrStatus() != null)
+			d.setLdrStatus(t.getLdrStatus());
+		else d.setLdrStatus(this.getLdrStatus());
+		
+		if (t.getLdrValue() != null)
+			d.setLdrValue(t.getLdrValue());
+		else d.setLdrValue(this.getLdrValue());
+		
+		if (t.getPressure() != null)
+			d.setPressure(t.getPressure());
+		else d.setPressure(this.getPressure());
+		
+		if (t.getRhStatus() != null)
+			d.setRhStatus(t.getRhStatus());
+		else d.setRhStatus(this.getRhStatus());
+		
+		if (t.getRhValue() != null)
+			d.setRhValue(t.getRhValue());
+		else d.setRhValue(t.getRhValue());
+		
+		if (t.getStationID() != null)
+			d.setStationID(t.getStationID());
+		else d.setStationID(this.getStationID());
+		
+		if(t.getTemperature() != null)
+			d.setTemperature(t.getTemperature());
+		else d.setTemperature(t.getTemperature());
+		
+		if(t.getTimeStamp() != null)
+			d.setTimeStamp(t.getTimeStamp());
+		else d.setTimestamp(t.getTimestamp());
+		
+		return d;
+		
+	}
+	
 }

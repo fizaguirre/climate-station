@@ -27,28 +27,28 @@ public class RHStatus extends BaseBasicBolt {
 		if(sData != null) {
 			if ( sData.getSensors().getDHT22AH().intValue() > 30 )
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
-						sData.getDatetime().getValue(),
+						sData.getDatetime().getStationID(),
 						RHStateData.OK, sData));
 			else if(sData.getSensors().getDHT22AH().intValue() >= 20 
 					&& sData.getSensors().getDHT22AH().intValue() <= 30)
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
-						sData.getDatetime().getValue(),
+						sData.getDatetime().getStationID(),
 						RHStateData.Atention, sData));
 			else if (sData.getSensors().getDHT22AH().intValue() >= 12
 					&& sData.getSensors().getDHT22AH().intValue() < 20)
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
-						sData.getDatetime().getValue(),
+						sData.getDatetime().getStationID(),
 						RHStateData.Alert, sData));
 			else if (sData.getSensors().getDHT22AH().intValue() < 12)
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
-						sData.getDatetime().getValue(),
+						sData.getDatetime().getStationID(),
 						RHStateData.Emergency, sData));
 		}
 
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer arg0) {
-		arg0.declare(new Fields("worker", "time", "data", "sData"));
+		arg0.declare(new Fields("worker", "sID", "data", "sData"));
 
 	}
 

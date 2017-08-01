@@ -31,10 +31,10 @@ public class TopologyMain {
 		fieldsGrouping("get-statistics", new Fields("source"));
 		//Summary
 		builder.setBolt("summary", new SummaryResults(), 4)
-			.shuffleGrouping("ldr-status")
-			.shuffleGrouping("atm-status")
-			.shuffleGrouping("rh-status")
-			.shuffleGrouping("compute-heat-index");
+			.fieldsGrouping("ldr-status", new Fields("sID"))
+			.fieldsGrouping("atm-status", new Fields("sID"))
+			.fieldsGrouping("rh-status", new Fields("sID"))
+			.fieldsGrouping("compute-heat-index", new Fields("sID"));
 		
 		Config conf = new Config();
 		//conf.put("jsonFile",  args[0]);
@@ -46,7 +46,7 @@ public class TopologyMain {
 				conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 				LocalCluster cluster = new LocalCluster();
 				cluster.submitTopology("Collecting data",  conf,  builder.createTopology());
-				Thread.sleep(20000);
+				Thread.sleep(40000);
 				cluster.shutdown();
 				System.out.println("===== > Shutting down Local Cluster");
 			}
