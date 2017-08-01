@@ -15,6 +15,7 @@ public class RHStatus extends BaseBasicBolt {
 	private static final long serialVersionUID = 1L;
 
 	public enum RHStateData {
+		OK,
 		Atention,
 		Alert,
 		Emergency
@@ -24,15 +25,21 @@ public class RHStatus extends BaseBasicBolt {
 		StationData sData = (StationData) input.getValueByField("data");
 		
 		if(sData != null) {
-			if(sData.getSensors().getBMP085PRESSURE().intValue() >= 20 )
+			if ( sData.getSensors().getDHT22AH().intValue() > 30 )
+				collector.emit(new Values(SenderBolt.RHStatusBolt,
+						sData.getDatetime().getValue(),
+						RHStateData.OK));
+			else if(sData.getSensors().getDHT22AH().intValue() >= 20 
+					&& sData.getSensors().getDHT22AH().intValue() <= 30)
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
 						sData.getDatetime().getValue(),
 						RHStateData.Atention));
-			else if (sData.getSensors().getBMP085PRESSURE().intValue() >= 12)
+			else if (sData.getSensors().getDHT22AH().intValue() >= 12
+					&& sData.getSensors().getDHT22AH().intValue() < 20)
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
 						sData.getDatetime().getValue(),
 						RHStateData.Alert));
-			else if (sData.getSensors().getBMP085PRESSURE().intValue() < 12)
+			else if (sData.getSensors().getDHT22AH().intValue() < 12)
 				collector.emit(new Values(SenderBolt.RHStatusBolt,
 						sData.getDatetime().getValue(),
 						RHStateData.Emergency));

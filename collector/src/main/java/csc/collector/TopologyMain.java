@@ -18,7 +18,7 @@ public class TopologyMain {
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("get-statistics", new GetStatistics(), 2);
 		//RH
-		builder.setBolt("rh-status", new LDRStatus(), 4).
+		builder.setBolt("rh-status", new RHStatus(), 4).
 		fieldsGrouping("get-statistics", new Fields("source"));
 		//LDR
 		builder.setBolt("ldr-status", new LDRStatus(), 4).
