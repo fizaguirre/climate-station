@@ -26,16 +26,16 @@ public class ATMLevel extends BaseBasicBolt {
 			if ( sData.getSensors().getBMP085PRESSURE() > 1013.0)
 				collector.emit(new Values(SenderBolt.ATMLevelBolt,
 						sData.getDatetime().getValue(),
-						ATMLevelData.High));
+						ATMLevelData.High, sData));
 			else if ( sData.getSensors().getBMP085PRESSURE() <= 1013.0)
 				collector.emit(new Values(SenderBolt.ATMLevelBolt,
 						sData.getDatetime().getValue(),
-						ATMLevelData.Low));
+						ATMLevelData.Low, sData));
 		}
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer arg0) {
-		arg0.declare(new Fields("worker", "time", "data"));
+		arg0.declare(new Fields("worker", "time", "data", "sData"));
 
 	}
 

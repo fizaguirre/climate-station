@@ -27,22 +27,22 @@ public class LDRStatus extends BaseBasicBolt {
 			if(sData.getSensors().getLDR() > 90.0)
 				collector.emit(new Values(SenderBolt.LDRStatusBolt,
 						sData.getDatetime().getValue(),
-						LDRData.Sunny));
+						LDRData.Sunny, sData));
 			else if (sData.getSensors().getLDR() > 60.0)
 				collector.emit(new Values(SenderBolt.LDRStatusBolt,
 						sData.getDatetime().getValue(),
-						LDRData.Mood));
+						LDRData.Mood, sData));
 			else
 				collector.emit(new Values(SenderBolt.LDRStatusBolt,
 						sData.getDatetime().getValue(),
-						LDRData.Night));
+						LDRData.Night, sData));
 				
 		}
 
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer arg0) {
-		arg0.declare(new Fields("worker", "time", "data"));
+		arg0.declare(new Fields("worker", "time", "data", "sData"));
 
 	}
 
