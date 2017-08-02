@@ -54,6 +54,10 @@ public class GetStatistics extends BaseRichSpout {
 		this.mapper = new ObjectMapper();
 		this.mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		
+		/*
+		 * Build the classes needed to retrieve data from the queue
+		 */
+		
 		try{
 			csa = CloudStorageAccount.parse(storageConnectionString);
 			cqc = csa.createCloudQueueClient();
@@ -67,8 +71,16 @@ public class GetStatistics extends BaseRichSpout {
 	}
 
 	public void nextTuple() {
+		/*
+		 * Gets a message from the queue, deserialize and emit to the next Bolt.
+		 * The deserialization is made using jackson to parse the json.
+		 */
+		
 		try {
 			CloudQueueMessage message = cq.retrieveMessage();
+			//System.out.println("Checking message");
+			if (message == null)
+				Thread.sleep(1000);
 			
 			if (message != null)
 			{

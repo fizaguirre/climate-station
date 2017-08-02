@@ -13,7 +13,9 @@ public class ATMLevel extends BaseBasicBolt {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	
+	// Atmosferic Pressure
 	public enum ATMLevelData {
 		High,
 		Low

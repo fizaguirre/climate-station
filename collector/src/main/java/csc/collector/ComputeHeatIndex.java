@@ -25,6 +25,8 @@ public class ComputeHeatIndex extends BaseBasicBolt {
 	private final Double c8 = 0.00085282;
 	private final Double c9 = -0.00000199;
 	
+	
+	//Heat index
 	public enum HeatIndexStatus {
 		OK,
 		CAUTION,
@@ -37,6 +39,8 @@ public class ComputeHeatIndex extends BaseBasicBolt {
 		StationData sData = (StationData) input.getValueByField("data");
 		
 		HeatIndexStatus hs = HeatIndexStatus.OK;
+		
+		//Compute heat index
 		
 		if (sData != null) {
 			Double T = 1.8 * sData.getSensors().getDHT22AH() + 32.0; //Temperature in F

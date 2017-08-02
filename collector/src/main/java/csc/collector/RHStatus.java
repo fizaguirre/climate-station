@@ -14,6 +14,8 @@ public class RHStatus extends BaseBasicBolt {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	// Relative humidity index
 	public enum RHStateData {
 		OK,
 		Atention,

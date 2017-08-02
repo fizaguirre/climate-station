@@ -14,6 +14,7 @@ public class LDRStatus extends BaseBasicBolt {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	// Weather state
 	public enum LDRData {
 		Sunny,
 		Mood,

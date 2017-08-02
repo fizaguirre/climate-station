@@ -1,3 +1,3 @@
-Queues
+O cluster se encontra na pasta collector.
 
-https://docs.microsoft.com/en-us/azure/storage/storage-java-how-to-use-queue-storage
+Na pasta raiz encontra-se o relatorio com as instrucoes para a compilacao.

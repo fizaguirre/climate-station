@@ -16,21 +16,27 @@ public class TopologyMain {
 	public static void main(String[] args) throws InterruptedException {
 		
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("get-statistics", new GetStatistics(), 2);
+		builder.setSpout("get-statistics", new GetStatistics(), 2)
+			.setNumTasks(4);
 		//RH
-		builder.setBolt("rh-status", new RHStatus(), 4).
-		fieldsGrouping("get-statistics", new Fields("source"));
+		builder.setBolt("rh-status", new RHStatus(), 4)
+		.setNumTasks(8)
+		.fieldsGrouping("get-statistics", new Fields("source"));
 		//LDR
-		builder.setBolt("ldr-status", new LDRStatus(), 4).
-		fieldsGrouping("get-statistics", new Fields("source"));
+		builder.setBolt("ldr-status", new LDRStatus(), 4)
+		.setNumTasks(8)
+		.fieldsGrouping("get-statistics", new Fields("source"));
 		//ATM
-		builder.setBolt("atm-status", new ATMLevel(), 4).
-		fieldsGrouping("get-statistics", new Fields("source"));
+		builder.setBolt("atm-status", new ATMLevel(), 4)
+		.setNumTasks(8)
+		.fieldsGrouping("get-statistics", new Fields("source"));
 		//HI
-		builder.setBolt("compute-heat-index", new ComputeHeatIndex(), 4).
-		fieldsGrouping("get-statistics", new Fields("source"));
+		builder.setBolt("compute-heat-index", new ComputeHeatIndex(), 4)
+		.setNumTasks(8)
+		.fieldsGrouping("get-statistics", new Fields("source"));
 		//Summary
-		builder.setBolt("summary", new SummaryResults(), 4)
+		builder.setBolt("summary", new SummaryResults(), 8)
+			.setNumTasks(16)
 			.fieldsGrouping("ldr-status", new Fields("sID"))
 			.fieldsGrouping("atm-status", new Fields("sID"))
 			.fieldsGrouping("rh-status", new Fields("sID"))
@@ -39,6 +45,9 @@ public class TopologyMain {
 		Config conf = new Config();
 		//conf.put("jsonFile",  args[0]);
 		conf.setDebug(false);
+		
+		// If local is passed as parameter, start local topology
+		// otherwise start cluster topology
 
 		if( args != null && args.length == 1) {
 			if (args[0].equals("local")) {

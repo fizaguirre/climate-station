@@ -14,6 +14,7 @@ import com.microsoft.azure.storage.table.CloudTable;
 import com.microsoft.azure.storage.table.CloudTableClient;
 import com.microsoft.azure.storage.table.TableBatchOperation;
 import com.microsoft.azure.storage.table.TableOperation;
+import com.microsoft.azure.storage.table.TableResult;
 import com.microsoft.azure.storage.table.TableServiceException;
 
 import csc.collector.ATMLevel.ATMLevelData;
@@ -31,6 +32,8 @@ public class SummaryResults extends BaseRichBolt {
 	HashMap<Integer, HashMap<String, DataTableReport>> tableData;
 	//HashMap<Integer, TableBatchOperation> batchOperations;
 	CloudTable entryTable;
+	
+	//Connection string to access the Table Service
 	public static final String storageConnectionString =
 		    "DefaultEndpointsProtocol=http;" +
 		    "AccountName=izastorm;" +
@@ -39,6 +42,11 @@ public class SummaryResults extends BaseRichBolt {
 
 	public void execute(Tuple input) {
 		SenderBolt sender = (SenderBolt) input.getValueByField("worker");
+		
+		/*
+		 * For each tuple received, add the property to the classe that represents the Table.
+		 * If the table is filled up, insert it into the Table Service.
+		 */
 		
 		StationData sData;
 		switch ( sender ) {
@@ -102,6 +110,10 @@ public class SummaryResults extends BaseRichBolt {
 	}
 	
 	private void insertTableEntry(StationData sData, Tuple entry, SenderBolt sender) {
+		/*
+		 * Inserts the property into the table class
+		 * If the table is filled up, insert it into the Table Service
+		 */
 		try {
 			DataTableReport table;
 			HashMap<String, DataTableReport> report;
@@ -156,7 +168,13 @@ public class SummaryResults extends BaseRichBolt {
 				try {
 					//System.out.println("Table " + table.toString() + " done.");
 					TableOperation op = TableOperation.insertOrReplace(table);
-					entryTable.execute(op);
+					TableResult result = entryTable.execute(op);
+					//System.out.println("Row add status " + Integer.toString(result.getHttpStatusCode()) );
+					
+					//Remove entry from the hash map
+					report = this.tableData.get(sData.getDatetime().getStationID());
+					report.remove(sData.getDatetime().getValue());
+					this.tableData.put(sData.getDatetime().getStationID(), report);
 				}
 				catch (TableServiceException e) {
 					e.printStackTrace();

@@ -12,12 +12,14 @@ from azure.storage.queue import QueueService
 
 MESSAGE_STRING = 186
 
-def generate(n, id):
+def generate(id, n):
     global TERMINATE
 
     queue_service = QueueService(account_name='izastorm',
                     account_key='isUic1EEbXg8l53zUrl+o1Jmf8JPze/E8S5XQ3ActlrmpEmGqMSKdkSP/RTF4aFAdQmLeVy6DWT3pGJ1k/I2HA==')
     dateFormat = '%Y-%m-%d-%H-%M-%S'
+
+    time.sleep(random.uniform(0.0, 5.0))
 
     while(True):
         data ={}
@@ -37,8 +39,11 @@ def generate(n, id):
         data['sensors'] = sensorsValues
         data['datetime'] = datetimeValues
 
-        print json.dumps(data).decode('utf-8')
-        queue_service.put_message('stormtest', json.dumps(data).decode('utf-8'))
+        #print json.dumps(data).decode('utf-8')
+        try:
+            queue_service.put_message('stormtest', json.dumps(data).decode('utf-8'))
+        except:
+            time.sleep(random.uniform(0.0, 2.0))
 
         try:
             time.sleep(n)
@@ -61,8 +66,8 @@ def main():
 
         threads = []
         for i in range(nstations * m, (nstations * m) + nstations):
-            t = threading.Thread(target=generate, args=(interval, tsleep))
-            #time.sleep(random.uniform(0.0,1.0))
+            t = threading.Thread(target=generate, args=(i, tsleep))
+            #time.sleep(random.uniform(0.0,0.5))
             threads.append(t)
             t.start()
 
