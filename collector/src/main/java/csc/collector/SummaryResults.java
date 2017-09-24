@@ -34,10 +34,7 @@ public class SummaryResults extends BaseRichBolt {
 	CloudTable entryTable;
 	
 	//Connection string to access the Table Service
-	public static final String storageConnectionString =
-		    "DefaultEndpointsProtocol=http;" +
-		    "AccountName=izastorm;" +
-		    "AccountKey=isUic1EEbXg8l53zUrl+o1Jmf8JPze/E8S5XQ3ActlrmpEmGqMSKdkSP/RTF4aFAdQmLeVy6DWT3pGJ1k/I2HA==";
+	public static final String storageConnectionString = ""; //String to connecto to the Azure DB
 	
 
 	public void execute(Tuple input) {
