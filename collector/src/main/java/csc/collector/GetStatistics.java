@@ -30,10 +30,7 @@ public class GetStatistics extends BaseRichSpout {
 	ObjectMapper mapper;
 	StationData sData;
 	
-	public static final String storageConnectionString =
-		    "DefaultEndpointsProtocol=http;" +
-		    "AccountName=izastorm;" +
-		    "AccountKey=isUic1EEbXg8l53zUrl+o1Jmf8JPze/E8S5XQ3ActlrmpEmGqMSKdkSP/RTF4aFAdQmLeVy6DWT3pGJ1k/I2HA==";
+	public static final String storageConnectionString = ""; //String to connect to the Azure Queue
 	
 	CloudStorageAccount csa;
 	CloudQueueClient cqc;
